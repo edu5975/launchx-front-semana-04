@@ -1,0 +1,35 @@
+.capitalize {
+    text-transform: capitalize;
+}
+
+.card-imagen {
+    margin: 10%;
+    background-image: url('../img/pokeball.png');
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    height: 80%;
+    width: 80%;
+    text-align: center;
+}
+
+.card-header {
+    text-align: center;
+}
+
+.btn-pokemon {
+    color: #fff;
+    background-color: #375a7f;
+    border-color: #375a7f;
+}
+
+.tipos {
+    height: 2rem;
+}
+
+.tipos div {
+    color: black;
+    border-radius: 10px;
+    text-align: center;
+}
