@@ -23,11 +23,68 @@
     </nav>
     <div style="padding-top: 15px;"></div>
     <div class="container-fluid">
-        <div id="lista_pokemon" class="row">
+        <div class="row">
+            <div class="form-group">
+                <div class="input-group">
+                    <input type="text" id="input_pokemon" placeholder="Nombre del pókemon" class="form-control">
+                    <button type="button" id="btn_buscar" class="btn btn-primary">Buscar</button>
+                </div>
+            </div>
+        </div>
+        <div id="lista_pokemon" class="row" style="padding-top: 15px;">
         </div>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <div class="modal" id="modal_pokemon">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title capitalize" id="modal_title"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true"></span>
+              </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-lg-6 col-sm-12">
+                            <div id="modal_imagen"></div>
+                            <div id="modal_tipos"></div>
+                        </div>
+                        <div class="col-lg-6 col-sm-12">
+                            <ul class="nav nav-tabs">
+                                <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#tab_modal_general">General</a></li>
+                                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab_modal_moves">Movements</a></li>
+                                <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab_modal_stats">Stats</a></li>
+                            </ul>
+                            <div id="myTabContent" class="tab-content">
+                                <div class="tab-pane fade active show" id="tab_modal_general">
+                                    <p><strong>ID: </strong><span id="modal_id"></span></p>
+                                    <p><strong>Name: </strong><span id="modal_name"></span></p>
+                                    <p><strong>Description: </strong><span id="modal_text_entry"></span></p>
+                                    <p><strong>Genera: </strong><span id="modal_genera"></span></p>
+                                </div>
+                                <div class="tab-pane fade" id="tab_modal_moves">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Move</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="modal_table_moves_body"></tbody>
+                                    </table>
+                                </div>
+                                <div class="tab-pane fade" id="tab_modal_stats">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://bootswatch.com/_vendor/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js" integrity="sha512-QSkVNOCYLtj73J4hbmVoOV6KVZuMluZlioC+trLpewV8qMjsWqlIQvkn1KGX2StWvPMdWGBqim1xlC8krl1EKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="js/bootstrap.js"></script>
     <script src="js/pokedex.js"></script>
 </body>
