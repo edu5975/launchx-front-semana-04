@@ -45,7 +45,43 @@ const getInformacionPorId = async(id) => {
     let pokemon_aux2 = await rest.json();
     pokemon.pokemon = pokemon_aux2;
 
+    pokemon.evolution = await getEvolutionInformation(pokemon.evolution_chain.url);
+
     mostrar_modal_pokemon(pokemon);
+}
+
+const getBasicInformationID = async(id) => {
+    let url = `https://pokeapi.co/api/v2/pokemon-species/${id}`;
+    let rest = await fetch(url);
+    let pokemon_aux = await rest.json();
+    return pokemon_aux;
+}
+
+const getBasicInformationUrl = async(url) => {
+    let rest = await fetch(url);
+    let pokemon_aux = await rest.json();
+
+    url = `https://pokeapi.co/api/v2/pokemon/${pokemon_aux.id}`;
+    rest = await fetch(url);
+    let pokemon_aux2 = await rest.json();
+    pokemon_aux.pokemon = pokemon_aux2;
+
+    return pokemon_aux;
+}
+
+const getEvolutionInformation = async(url) => {
+    let rest = await fetch(url);
+    let pokemon_aux3 = await rest.json();
+
+    pokemon_aux3.chain.pokemon = await getBasicInformationUrl(pokemon_aux3.chain.species.url);
+
+    let evolution = pokemon_aux3.chain.evolves_to;
+    while (evolution.length > 0) {
+        evolution[0].pokemon = await getBasicInformationUrl(evolution[0].species.url);
+        evolution = evolution[0].evolves_to;
+    }
+
+    return pokemon_aux3;
 }
 
 let imprime = true;
@@ -108,7 +144,6 @@ const drawPokemonFilteredList = (filter) => {
 }
 
 function mostrar_modal_pokemon(pokemon) {
-    console.log(pokemon);
     let imagen = imagen_pokemon(pokemon.id);
     let poke_types = pokemon.pokemon.types.map(type => type.type.name);
     let unico_tipo = poke_types.length == 1 ? false : true;
@@ -155,6 +190,9 @@ function mostrar_modal_pokemon(pokemon) {
 
     //STATS
     generar_grafico_stats(pokemon.pokemon.stats);
+
+    //EVOLUTIONS
+    generar_evoluciones(pokemon.evolution);
     
     $('#modal_pokemon').modal('show');
 }
@@ -211,6 +249,50 @@ function generar_grafico_stats(stats){
     );
 }
 
+function generar_evoluciones(evolutions) {      
+    $("#cartas_evolution").html('');
+
+    carta_evolucion(evolutions.chain.pokemon);
+
+    let evolution = evolutions.chain.evolves_to;
+    while (evolution.length > 0) {
+        carta_evolucion(evolution[0].pokemon);
+        evolution = evolution[0].evolves_to;
+    }
+};
+
+function carta_evolucion(pokemon){
+    console.log(pokemon);
+    let imagen = imagen_pokemon(pokemon.id);
+    let poke_types = pokemon.pokemon.types.map(type => type.type.name);
+    let unico_tipo = poke_types.length == 1 ? false : true;
+
+    $("#cartas_evolution").append(`
+    <div class="col-md-4 alert alert-secondary pokemon${pokemon.id}">        
+        <div class="col-md-12">   
+            <h4 class="capitalize alert-heading">${pokemon.name}</h4>
+        </div>    
+        <div class="col-md-12">
+            <div class="card-imagen">                
+                <img src="${imagen}" alt="${pokemon.name}" class="img-fluid">
+            </div>       
+        </div>                
+        <div class="row tipos">
+            <div class="${unico_tipo?'col-12':'col-12'} capitalize" style="background-color: ${colors[poke_types[0]]};border-color: ${colors[poke_types[0]]};">
+            ${poke_types[0]}
+            </div>
+            ${unico_tipo?`<div class="col-12 capitalize" style="background-color: ${colors[poke_types[1]]};border-color: ${colors[poke_types[1]]};">
+            ${poke_types[1]}
+            </div>`:''}                    
+        </div>  
+    </div>
+    `);
+    
+    $('.pokemon'+pokemon.id).on( "click", function() {
+        getInformacionPorId(pokemon.id);
+    });
+}
+
 function pinta_pokemon(pokemon) {
     let imagen = imagen_pokemon(pokemon.id);
 
@@ -219,14 +301,14 @@ function pinta_pokemon(pokemon) {
 
 
     $("#lista_pokemon").append(`
-    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12" id="pokemon${pokemon.id}">
+    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 pokemon${pokemon.id}">
         <div class="card text-white bg-secondary mb-3" style="max-width: 20rem;">
             <div class="card-header capitalize"><h5>${pokemon.name}</h5></div>
             <div class="card-body card-imagen">                
                 <img src="${imagen}" alt="${pokemon.name}" class="img-fluid">
             </div>            
             <div class="card-body">                
-                <div class="row tipos" >
+                <div class="row tipos">
                     <div class="${unico_tipo?'col-6':'col-12'} capitalize" style="background-color: ${colors[poke_types[0]]};border-color: ${colors[poke_types[0]]};">
                     ${poke_types[0]}
                     </div>
@@ -240,7 +322,7 @@ function pinta_pokemon(pokemon) {
     `);
 
     
-    $('#pokemon'+pokemon.id).on( "click", function() {
+    $('.pokemon'+pokemon.id).on( "click", function() {
         getInformacionPorId(pokemon.id);
     });
 }
