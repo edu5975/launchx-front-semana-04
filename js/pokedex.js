@@ -128,11 +128,16 @@ const getListaPokemonPorTipo = async(url) => {
 }
 
 
-const drawPokemonList = () => {
+const drawPokemonList = async() => {
     $("#lista_pokemon").html('');
-    lista_pokemon.forEach(async(element) => {
-        await getInformacionPorUrl(element.url);
-    });
+    //lista_pokemon.forEach(async(element,i) => {
+    //    await getInformacionPorUrl(element.url);
+    //});
+
+    for (let i = pagina * objetos_pagina - objetos_pagina; i < lista_pokemon.length && i < pagina * objetos_pagina; i++) {
+        let pokemon = lista_pokemon[i];
+        await getInformacionPorUrl(pokemon.url);
+    }
 }
 
 const drawPokemonFilteredList = (filter) => {
@@ -301,7 +306,7 @@ function pinta_pokemon(pokemon) {
 
 
     $("#lista_pokemon").append(`
-    <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12 pokemon${pokemon.id}">
+    <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 pokemon${pokemon.id}">
         <div class="card text-white bg-secondary mb-3" style="max-width: 20rem;">
             <div class="card-header capitalize"><h5>${pokemon.name}</h5></div>
             <div class="card-body card-imagen">                
@@ -341,5 +346,38 @@ $(document).ready(async() => {
 
     await getListaTipos();
     await getListaPokemonPorGeneracion(1);
-    drawPokemonList();
+    crearPaginacion();
 });
+
+let pagina = 1;
+let objetos_pagina = 24;
+
+function crearPaginacion() {
+    let html = `<li class="page-item disabled" id="pagination_previous" data-dt="1"><a class="page-link" href="#">&laquo;</a></li>`;
+    html = '';
+    let paginas = Math.ceil(lista_pokemon.length / objetos_pagina);
+    for(let i = 1; i <= paginas; i++){
+        html += `<li class="page-item ${i==1?'active':''}" data-dt="${i}"><a class="page-link" href="#">${i}</a></li>`
+    }
+    //html += `<li class="page-item" id="pagination_next"><a class="page-link" href="#" data-dt="${paginas}">&raquo;</a></li>`;
+    $("#pagination").html(html);
+    drawPokemonList();
+
+    $(document).on("click", ".page-item", function(){
+        console.log($(this).data())
+        pagina = $(this).data('dt');
+
+        $(".page-item").removeClass("active");
+        $(this).addClass("active");
+
+        $("#pagination_previous").removeClass("disabled");
+        $("#pagination_next").removeClass("disabled");
+
+        if(pagina == 1)
+            $("#pagination_previous").addClass("disabled");
+        if(pagina == paginas)
+            $("#pagination_next").addClass("disabled");
+
+        drawPokemonList();
+    });
+}
