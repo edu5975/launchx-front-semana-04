@@ -153,6 +153,11 @@ function mostrar_modal_pokemon(pokemon) {
     let poke_types = pokemon.pokemon.types.map(type => type.type.name);
     let unico_tipo = poke_types.length == 1 ? false : true;
 
+    $("#header_modal").css("background-color", colors[poke_types[0]]);
+    $("#header_modal").css("color", "black");
+
+    $(this).addClass("active");
+
     // BASIC
     $('#modal_title').html(pokemon.name);
     $('#modal_imagen').html(`
@@ -179,6 +184,10 @@ function mostrar_modal_pokemon(pokemon) {
             text_extry = element.flavor_text;
     });
     $('#modal_text_entry').html(text_extry);
+    $('#modal_habitat').html(pokemon.habitat.name);
+    $('#modal_shape').html(pokemon.shape.name);
+    $('#modal_height').html(pokemon.pokemon.height);
+    $('#modal_weight').html(pokemon.pokemon.weight);
     
     let genera = 'Without description';  
     pokemon.genera.forEach((element) => {
@@ -267,7 +276,6 @@ function generar_evoluciones(evolutions) {
 };
 
 function carta_evolucion(pokemon){
-    console.log(pokemon);
     let imagen = imagen_pokemon(pokemon.id);
     let poke_types = pokemon.pokemon.types.map(type => type.type.name);
     let unico_tipo = poke_types.length == 1 ? false : true;
@@ -308,7 +316,7 @@ function pinta_pokemon(pokemon) {
     $("#lista_pokemon").append(`
     <div class="col-lg-2 col-md-3 col-sm-4 col-xs-6 pokemon${pokemon.id}">
         <div class="card text-white bg-secondary mb-3" style="max-width: 20rem;">
-            <div class="card-header capitalize"><h5>${pokemon.name}</h5></div>
+            <div class="card-header capitalize" style="background-color: ${colors[poke_types[0]]}; color:black;"><h5>${pokemon.name}</h5></div>
             <div class="card-body card-imagen">                
                 <img src="${imagen}" alt="${pokemon.name}" class="img-fluid">
             </div>            
@@ -335,6 +343,10 @@ function pinta_pokemon(pokemon) {
 $(document).ready(async() => {
     $('#btn_buscar').click(buscador);
     $('#input_pokemon').keyup(buscador);
+    $('#select_generacion').change(async function(){
+        await getListaPokemonPorGeneracion($(this).val());
+        crearPaginacion();
+    });
 
     function buscador(){        
         let input_pokemon = $('#input_pokemon');
@@ -350,7 +362,7 @@ $(document).ready(async() => {
 });
 
 let pagina = 1;
-let objetos_pagina = 24;
+let objetos_pagina = 18;
 
 function crearPaginacion() {
     let html = `<li class="page-item disabled" id="pagination_previous" data-dt="1"><a class="page-link" href="#">&laquo;</a></li>`;
@@ -364,7 +376,6 @@ function crearPaginacion() {
     drawPokemonList();
 
     $(document).on("click", ".page-item", function(){
-        console.log($(this).data())
         pagina = $(this).data('dt');
 
         $(".page-item").removeClass("active");

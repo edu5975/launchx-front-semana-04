@@ -16,7 +16,6 @@
             <a class="navbar-brand" href="/">Pokedex</a>
             <div class="collapse navbar-collapse" id="navbarColor01">
                 <ul class="navbar-nav me-auto">
-                    <li class="nav-item"><a class="nav-link active" href="#">Generaciones</a></li>
                 </ul>
             </div>
         </div>
@@ -24,24 +23,34 @@
     <div style="padding-top: 15px;"></div>
     <div class="container-fluid">
         <div class="row">
-            <div class="form-group">
-                <div class="input-group">
-                    <input type="text" id="input_pokemon" placeholder="Nombre del pókemon" class="form-control">
-                    <button type="button" id="btn_buscar" class="btn btn-primary">Buscar</button>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="select_generacion">Generación</label>
+                    <select name="select_generacion" id="select_generacion" class="form-control">
+                        <option value="1">Primera</option>
+                        <option value="2">Segunda</option>
+                        <option value="3">Tercera</option>
+                        <option value="4">Cuarta</option>
+                        <option value="5">Quinta</option>
+                        <option value="6">Sexta</option>
+                        <option value="7">Septima</option>
+                        <option value="8">Octava</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-9">
+                <label for="input_pokemon"></label>
+                <div class="form-group">
+                    <div class="input-group">
+                        <input type="text" id="input_pokemon" placeholder="Nombre del pókemon" class="form-control">
+                        <button type="button" id="btn_buscar" class="btn btn-primary">Buscar</button>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="row" style="padding-top: 15px;">
             <div style="display: flex; justify-content: center;">
-                <ul class="pagination pagination-lg" id="pagination">
-                    <li class="page-item disabled"><a class="page-link" href="#">&laquo;</a></li>
-                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                    <li class="page-item"><a class="page-link" href="#">4</a></li>
-                    <li class="page-item"><a class="page-link" href="#">5</a></li>
-                    <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
-                </ul>
+                <ul class="pagination pagination-lg" id="pagination"></ul>
             </div>
         </div>
 
@@ -52,11 +61,11 @@
     <div class="modal" id="modal_pokemon">
         <div class="modal-dialog modal-xl" role="document">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header" id="header_modal">
                     <h5 class="modal-title capitalize" id="modal_title"></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true"></span>
-              </button>
+                    <button type="button" class="btn" data-bs-dismiss="modal" aria-label="Close" style="color:black;">
+                        Cerrar
+                    </button>
                 </div>
                 <div class="modal-body">
                     <div class="row">
@@ -66,7 +75,7 @@
                         </div>
                         <div class="col-lg-7 col-sm-12">
                             <ul class="nav nav-tabs">
-                                <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#tab_modal_general">General</a></li>
+                                <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#tab_modal_general" id="nav_tab_general">General</a></li>
                                 <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab_modal_moves">Movements</a></li>
                                 <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab_modal_stats">Stats</a></li>
                                 <li class="nav-item"><a class="nav-link" data-bs-toggle="tab" href="#tab_modal_evolution">Evolutions</a></li>
@@ -74,9 +83,13 @@
                             <div id="myTabContent" class="tab-content">
                                 <div class="tab-pane fade active show" id="tab_modal_general">
                                     <p><strong>ID: </strong><span id="modal_id"></span></p>
-                                    <p><strong>Name: </strong><span id="modal_name"></span></p>
-                                    <p><strong>Description: </strong><span id="modal_text_entry"></span></p>
-                                    <p><strong>Genera: </strong><span id="modal_genera"></span></p>
+                                    <p><strong>Name: </strong><span id="modal_name" class="capitalize"></span></p>
+                                    <p><strong>Description: </strong><span id="modal_text_entry" class="capitalize"></span></p>
+                                    <p><strong>Genera: </strong><span id="modal_genera" class="capitalize"></span></p>
+                                    <p><strong>Habitat: </strong><span id="modal_habitat" class="capitalize"></span></p>
+                                    <p><strong>Shape: </strong><span id="modal_shape" class="capitalize"></span></p>
+                                    <p><strong>Height: </strong><span id="modal_height"></span></p>
+                                    <p><strong>Weight: </strong><span id="modal_weight"></span></p>
                                 </div>
                                 <div class="tab-pane fade" id="tab_modal_moves">
                                     <table class="table table-hover">
